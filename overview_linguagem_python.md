@@ -329,3 +329,131 @@ Além disso, as compreensões de dicionários podem ser usadas para criar dicion
 Quando chaves são strings simples, é mais fácil especificar os pares usando argumentos nomeados no construtor:
 
 ![Alt text](image-56.png)
+
+
+### Módulos
+
+Ao sair e entrar de novo no interpretador Python, as definições anteriores (funções e variáveis) são perdidas. Portanto, se quiser escrever um programa maior, será mais eficiente usar um editor de texto para preparar as entradas para o interpretador, e executá-lo usando o arquivo como entrada. Isso é conhecido como criar um script.
+
+Em um programa maior é uma boa prática dividí-lo em arquivos menores, para facilitar a manutenção;
+
+Portanto uma definição que temos para módulo seria a maneira que o python tem de colocar as definições em um arquivo e então usá-las em um script ou em uma execução interativa do interpretador.
+
+As definições de um módulo podem ser importadas para outros módulos  ou para o módulo principal (a coleção de variáveis a que você tem acesso num script executado como um programa e no modo calculadora).
+
+O nome do arquivo é o nome do módulo acrescido do sufixo .py
+
+Dentro de um módulo, o nome do módulo (como uma string) está disponível como o valor da variável global __name__. Por exemplo, use seu editor de texto favorito para criar um arquivo chamado fibo.py no diretório atual com o seguinte conteúdo:
+
+![alt text](image-57.png)
+
+Agora, entre no interpretador Python e importe esse módulo com o seguinte comando
+
+![alt text](image-58.png)
+
+Isso não adiciona os nomes das funções definidas em fibo diretamente ao espaço de nomes atual (veja Escopos e espaços de nomes do Python para mais detalhes); isso adiciona somente o nome do módulo fibo. Usando o nome do módulo você pode acessar as funções:
+
+![alt text](image-59.png)
+
+Se você pretende usar uma função muitas vezes, você pode atribui-lá a um nome local:
+
+![alt text](image-60.png)
+
+### Mais sobre Módulos
+
+- Um módulo pode conter tanto instruções executáveis quanto definições de funções e classes
+- Eles são executados somente na primeira vez que o módulo é encontrado em uma instrução de importação.
+- Cada módulo tem seu próprio espaço de nomes privado, que é usado como espaço de nomes global para todas as funções definidas no módulo.
+- Para usar uma variável global de um módulo, poderá fazê-lo com a mesma notação usada para se referir às suas funções, nomemodulo.nomeitem.
+- Módulos podem importar outros módulos. É costume, porém não obrigatório, colocar todas as instruções import no início do módulo (ou script , se preferir).
+
+Existe uma variante da instrução import que importa definições de um módulo diretamente para o espaço de nomes do módulo importador. Por exemplo:
+
+![alt text](image-61.png)
+
+Isso importa todos as declarações de nomes, exceto aqueles que iniciam com um sublinhado (_). Na maioria dos casos, programadores Python não usam esta facilidade porque ela introduz um conjunto desconhecido de nomes no ambiente, podendo esconder outros nomes previamente definidos.
+
+Note que, em geral, a prática do import * de um módulo ou pacote é desaprovada, uma vez que muitas vezes dificulta a leitura do código. Contudo, é aceitável para diminuir a digitação em sessões interativas.
+
+Se o nome do módulo é seguido pela palavra-chave as, o nome a seguir é vinculado diretamente ao módulo importado.
+
+![alt text](image-62.png)
+
+Isto efetivamente importa o módulo, da mesma maneira que import fibo fará, com a única diferença de estar disponível com o nome fib.
+
+Também pode ser utilizado com a palavra-chave from, com efeitos similares:
+
+![alt text](image-63.png)
+
+### Executando módulos como scripts
+
+Quando você rodar um módulo Python com
+
+![alt text](image-64.png)
+
+o código no módulo será executado, da mesma forma que quando é importado, mas com a variável __name__ com valor "__main__". Isto significa que adicionando este código ao final do seu módulo:
+
+![alt text](image-65.png)
+
+### Módulos padrões
+
+- A função dir()
+    - A função embutida dir() é usada para descobrir quais nomes são definidos por um módulo. Ela devolve uma lista ordenada de strings:
+    ![alt text](image-66.png)
+
+    - Sem argumentos, dir() lista os nomes atualmente definidos:
+    ![alt text](image-67.png)
+    
+### Pacotes
+
+- Os pacotes são uma maneira de estruturar o “espaço de nomes” dos módulos Python, usando “nomes de módulo com pontos”.
+- Por exemplo, o nome do módulo A.B designa um submódulo chamado B, em um pacote chamado A.
+- Suponha que você queira projetar uma coleção de módulos (um “pacote”) para o gerenciamento uniforme de arquivos de som. Existem muitos formatos diferentes (normalmente identificados pela extensão do nome de arquivo, por exemplo .wav, .aiff, .au), de forma que você pode precisar criar e manter uma crescente coleção de módulos de conversão entre formatos.
+- Ainda podem existir muitas operações diferentes, passíveis de aplicação sobre os arquivos de som (mixagem, eco, equalização, efeito stereo artificial).
+- Logo, possivelmente você também estará escrevendo uma coleção sempre crescente de módulos para aplicar estas operações. Eis uma possível estrutura para o seu pacote (expressa em termos de um sistema de arquivos hierárquico):
+
+![alt text](image-68.png)
+
+Ao importar esse pacote, Python busca pelo subdiretório com mesmo nome, nos diretórios listados em sys.path.
+
+Os arquivos __init__.py são necessários para que o Python trate diretórios contendo o arquivo como pacotes (a menos que se esteja usando um pacote de espaço de nomes, um recurso relativamente avançado). Isso impede que diretórios com um nome comum, como string, ocultem, involuntariamente, módulos válidos que ocorrem posteriormente no caminho de busca do módulo. No caso mais simples, __init__.py pode ser apenas um arquivo vazio, mas pode também executar código de inicialização do pacote, ou configurar a variável __all__, descrita mais adiante.
+
+Usuários do pacote podem importar módulos individuais, por exemplo:
+
+![alt text](image-69.png)
+
+Isso carrega o submódulo sound.effects.echo. Ele deve ser referenciado com seu nome completo, como em:
+
+![alt text](image-70.png)
+
+Uma maneira alternativa para a importação desse módulo é:
+
+![alt text](image-71.png)
+
+Isso carrega o submódulo echo sem necessidade de mencionar o prefixo do pacote no momento da utilização, assim:
+
+![alt text](image-72.png)
+
+Também é possível importar diretamente uma única variável ou função:
+
+![alt text](image-73.png)
+
+Novamente, isso carrega o submódulo echo, mas a função echofilter() está acessível diretamente sem prefixo:
+
+![alt text](image-74.png)
+
+### Referências em um mesmo pacote
+
+Quando pacotes são estruturados em subpacotes (como no pacote sound do exemplo), pode-se usar a sintaxe de importações absolutas para se referir aos submódulos de pacotes irmãos (o que na prática é uma forma de fazer um import relativo, a partir da base do pacote). Por exemplo, se o módulo sound.filters.vocoder precisa usar o módulo echo do pacote sound.effects, é preciso importá-lo com from sound.effects import echo.
+
+Também é possível escrever imports relativos, com a forma from module import name. Esses imports usam pontos para indicar o pacote pai e o atual, envolvidos no import relativo. Do módulo surround, por exemplo, pode-se usar:
+
+![alt text](image-75.png)
+
+Note que imports relativos são baseados no nome do módulo atual. Uma vez que o nome do módulo principal é sempre "__main__", módulos destinados ao uso como módulo principal de um aplicativo Python devem sempre usar imports absolutos.
+
+### Pacotes em múltiplos diretórios
+
+Pacotes possuem mais um atributo especial, __path__. Inicializado como uma lista contendo o nome do diretório onde está o arquivo __init__.py do pacote, antes do código naquele arquivo ser executado. Esta variável pode ser modificada; isso afeta a busca futura de módulos e subpacotes contidos no pacote.
+
+Apesar de não ser muito usado, esse mecanismo permite estender o conjunto de módulos encontrados em um pacote.
